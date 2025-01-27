@@ -18,7 +18,7 @@ To use the plugin in your React project, you'll need to install it as an ESLint 
 ### 1. Install Dependencies
 
 ```bash
-npm install @foliagecp/react-i18n --save-dev
+npm install @foliagecp/react-i18n
 ```
 
 ---
