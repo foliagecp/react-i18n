@@ -1,0 +1,60 @@
+{
+  "name": "@foliagecp/react-i18n",
+  "description": "Foliage i18n plugin for react",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/index.d.ts": "./dist/index.d.ts"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/foliagecp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foliagecp/react-i18n.git"
+  },
+  "author": "Arseny Malinkovich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/foliagecp/react-i18n/issues"
+  },
+  "homepage": "https://github.com/foliagecp/react-i18n#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "node-polyglot": "^2.6.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5",
+    "vite-plugin-dts": "^4.2.4",
+    "@types/node-polyglot": "^2.5.0"
+  }
+}
