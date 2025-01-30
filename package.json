@@ -1,7 +1,7 @@
 {
   "name": "@foliagecp/react-i18n",
   "description": "Foliage i18n plugin for react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
