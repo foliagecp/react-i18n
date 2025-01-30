@@ -15,7 +15,7 @@ This project provides a React i18n plugin with an ESLint rule for validating i18
 
 **The library is hosted in the GitHub registry**. To install a package from the GitHub registry, you first need to configure the `.npmrc` file to point to the GitHub Package Registry.
 
-### 2. Configure .npmrc
+### 1. Configure .npmrc
 
 `.npmrc`
 
