@@ -2,11 +2,11 @@ import Polyglot from "node-polyglot";
 import { createContext, FC, ReactNode, useMemo } from "react";
 
 type Dictionary = {
-  [key: string]: string;
+  [phrase: string]: string;
 };
 
 type Dictionaries = {
-  [key: string]: Dictionary;
+  [locale: string]: Dictionary;
 };
 
 interface LanguageProviderProps {
