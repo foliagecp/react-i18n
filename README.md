@@ -1,6 +1,6 @@
 # Foliage react i18n
 
-This project provides a React i18n plugin with an ESLint rule for validating i18n dictionaries in JSON format. It ensures consistency across translation keys in your project by validating dictionary files and keeping them synchronized.
+This project provides a React i18n plugin with an ESLint rule for validating i18n dictionaries in JSON format. It ensures consistency across translation keys in your project by validating dictionary files and keeping them synchronized. This library uses **[Polyglot.js](https://github.com/airbnb/polyglot.js)**, a lightweight internationalization (i18n) library developed by Airbnb.
 
 ## Features
 
@@ -13,9 +13,18 @@ This project provides a React i18n plugin with an ESLint rule for validating i18
 
 ## Installation
 
-To use the plugin in your React project, you'll need to install it as an ESLint plugin.
+**The library is hosted in the GitHub registry**. To install a package from the GitHub registry, you first need to configure the `.npmrc` file to point to the GitHub Package Registry.
 
-### 1. Install Dependencies
+### 2. Configure .npmrc
+
+`.npmrc`
+
+```ini
+# Configure the registry for the @foliagecp scope to use GitHub Package Registry
+@foliagecp:registry=https://npm.pkg.github.com
+```
+
+### 2. Install Dependencies
 
 ```bash
 npm install @foliagecp/react-i18n
@@ -24,6 +33,19 @@ npm install @foliagecp/react-i18n
 ---
 
 # Usage
+
+## Structure example
+
+```
+src/
+  └── i18n/
+    ├── en.json # English translations
+    ├── fr.json # French translations
+    └── index.ts # Central file for managing dictionaries and types
+  ...
+eslint.config.mjs
+i18nkeys.js # The list of required keys that should exist in all dictionaries
+```
 
 ## 1. Dictionary Files
 
@@ -55,6 +77,8 @@ This plugin also supports TypeScript for type safety in your translation keys. Y
 
 You can import these dictionaries and define types like so:
 
+`index.ts`
+
 ```ts
 import en from "./en.json";
 import fr from "./fr.json";
@@ -67,6 +91,8 @@ export type DICTIONARY_TOKENS = keyof typeof en; // Represents the keys for the 
 export default dictionaries;
 ```
 
+_This file should be created by the developer in their project to manage dictionaries and define types for translation keys and tokens._
+
 ## 2. React Plugin Usage
 
 ##### 1. Root Component
@@ -74,13 +100,13 @@ export default dictionaries;
 ```jsx
 import { LanguageProvider } from "@foliagecp/react-i18n";
 import { LANG, DEFAULT_LANG } from 'path_to_your_values';
-import Dictionaries from "path_to_your_dictionaries"; // Adjust the path to where your dictionaries are stored
+import dictionaries from "path_to_your_dictionaries"; // Adjust the path to where your dictionaries are stored (index.ts from example)
 
 const RootComponent = ({ children }) => {
   return (
     <LanguageProvider
       locale={LANG} // The current language to be displayed (e.g., 'en', 'fr')
-      dictionaries={Dictionaries} // The dictionaries object you imported earlier.
+      dictionaries={dictionaries} // The dictionaries object you imported earlier.
       defaultLang={DEFAULT_LANG} //The default language code (e.g., 'en')
     >
       <html lang={LANG}>
@@ -116,6 +142,18 @@ export default SomeComponent;
 - `useLanguage`: This hook returns an object with a translate method that you can use to get translations for the specified keys (e.g., 'hello_world').
 - `DICTIONARY_TOKENS`: Type-safe translation keys, ensuring you only pass valid keys. (optional)
 
+If you don't want to repeatedly specify the type for `DICTIONARY_TOKENS` every time you use the useLanguage hook, you can wrap it in a custom hook. This custom hook will encapsulate the type logic and provide a cleaner API for your components.
+
+```ts
+import { DICTIONARY_TOKENS } from "path_to_your_dictionaries"; // Import dictionary tokens for type safety
+import { useLanguage } from "@foliagecp/react-i18n"; // Import the useLanguage hook
+
+export function useLocale() {
+  const language = useLanguage<DICTIONARY_TOKENS>();
+  return language.translate;
+}
+```
+
 This approach gives you full type safety, autocompletion, and an easy way to manage translations across your React components.
 
 ### Key Additions:
@@ -128,17 +166,15 @@ This should cover the integration of the React plugin in your app, giving both a
 
 ## 3. ESLint Configuration
 
-In your .eslintrc or ESLint config file, add the following configuration:
+In your .eslint.config.mjs add the following configuration:
 
 ```js
 import { eslintI18nPlugin } from "@foliagecp/react-i18n";
 
 const config = [
   {
-    files: ["**/your_path_to_dictionary_dir/*.json"], // Path to your dictionary files
-    ignores: [
-      `**/your_path_to_dictionary_dir/${process.env.default_lang}.json`,
-    ], // Exclude the default language JSON from validation
+    files: ["**/path_to_dictionary_dir/*.json"], // Path to your dictionary files
+    ignores: ["**/path_to_dictionary_dir/default_lang.json"], // Exclude the default language JSON from validation
     plugins: {
       i18n: eslintI18nPlugin,
     },
@@ -160,8 +196,30 @@ This rule ensures that all translation keys are consistent across your dictionar
 
 `i18nKeys`: The list of required keys that should exist in all dictionaries. This can be defined as part of your config and ensures that any missing keys will be flagged.
 
+Define keys
+
 ```js
 const i18nKeys = ["hello_world", "welcome_message"];
 ```
 
-If a dictionary file is missing one of these keys, it will trigger a warning.
+Or you use the script
+
+```js
+import { readFile } from "fs/promises";
+
+const path = new URL(
+  "path_to_dictionary_dir/default_lang.json",
+  import.meta.url
+);
+const defaultDictionary = JSON.parse(await readFile(path));
+
+export default Object.keys(defaultDictionary);
+```
+
+If a dictionary file is missing one of these keys, it will trigger a warning or error. Depends on Eslint config.
+
+**Note:** This README is written with the configuration and guidelines based on **ESLint version 9.0**. Some instructions and examples may depend on features or syntax introduced in this specific version. If you're using a different version of ESLint, be sure to check the relevant documentation for compatibility.
+
+## License
+
+Unless otherwise noted, the Foliage source files are distributed under the Apache Version 2.0 license found in the LICENSE file.
