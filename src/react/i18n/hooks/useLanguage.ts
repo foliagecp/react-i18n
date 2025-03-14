@@ -9,7 +9,11 @@ const useLanguage = <Keys>() => {
   return {
     translate: (key: Keys, options?: TranslateOptions) => {
       const { count: smart_count, ...rest } = options || {};
-      return engine.t(key as string, { smart_count, ...rest });
+      if (engine.has(key as string)) {
+        return engine.t(key as string, { smart_count, ...rest });
+      } else {
+        return key;
+      }
     },
   };
 };
