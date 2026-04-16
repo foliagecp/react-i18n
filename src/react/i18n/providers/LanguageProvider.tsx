@@ -1,5 +1,6 @@
 import Polyglot from "node-polyglot";
-import { createContext, FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
+import { LanguageContext } from "./LanguageContext";
 
 type Dictionary = {
   [phrase: string]: string;
@@ -16,22 +17,26 @@ interface LanguageProviderProps {
   dictionaries: Dictionaries;
 }
 
-export const LanguageContext = createContext({} as Polyglot);
-
 const LanguageProvider: FC<LanguageProviderProps> = ({
   locale,
   defaultLang,
   children,
   dictionaries,
 }) => {
-  const phrases =
-    locale === defaultLang
-      ? dictionaries[locale]
-      : Object.assign(dictionaries[defaultLang], dictionaries[locale]);
+  const phrases = useMemo(
+    () =>
+      locale === defaultLang
+        ? dictionaries[locale]
+        : {
+            ...dictionaries[defaultLang],
+            ...dictionaries[locale],
+          },
+    [defaultLang, dictionaries, locale]
+  );
 
   const engine = useMemo(
-    () => new Polyglot({ phrases, locale: locale }),
-    [locale]
+    () => new Polyglot({ phrases, locale }),
+    [locale, phrases]
   );
 
   return (
@@ -41,4 +46,5 @@ const LanguageProvider: FC<LanguageProviderProps> = ({
   );
 };
 
+export { LanguageContext } from "./LanguageContext";
 export default LanguageProvider;

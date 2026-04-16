@@ -1,10 +1,14 @@
 import { useContext } from "react";
-import { LanguageContext } from "../providers/LanguageProvider";
+import { LanguageContext } from "../providers/LanguageContext";
 
 type TranslateOptions = { count: number };
 
 const useLanguage = <Keys>() => {
   const engine = useContext(LanguageContext);
+
+  if (engine === null) {
+    throw new Error("useLanguage must be used within LanguageProvider");
+  }
 
   return {
     translate: (key: Keys, options?: TranslateOptions) => {
